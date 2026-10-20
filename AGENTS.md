@@ -54,13 +54,22 @@ reopened — and skip it otherwise.
 
 ## This repository
 
-<!--
-  Repository-specific instructions go here and are owned by this repository. Nothing syncs
-  this file back to the handbook, so edit freely. Good things to put here:
-    - what this project is, and its stack
-    - build, test and lint commands, and which of them to run before calling a change done
-    - known gotchas specific to this codebase
-  Anything that would apply to every repository belongs in the handbook instead.
--->
+Itrium Pixel, the pixel font Itrium's games share. It's a Godot 4.7 add-on written in GDScript:
+games take this repository in as a git submodule at `addons/itrium_pixel_font` and use the
+`PixelFont` class. It's licensed under the SIL Open Font License 1.1, with "Itrium" as a
+reserved font name.
 
-_To be filled in._
+- **Before calling a change done**, run the tests: `GODOT=<path to godot> tools/test.sh`. This
+  repository is an add-on, not a project, so the script builds a throwaway project that holds
+  the add-on the way a game does, and runs the tests there.
+- **Glyphs are text**: rows from the top, `#` ink and `.` paper, rows separated by spaces.
+  Capitals and digits are 7 rows; letters with descenders are 9. Every row of a glyph is the
+  same width.
+- **A game that prints a new character adds it here**, glyph and all, and adds it to `NEEDED`
+  in `tests/test_pixel_font.gd`, so nothing falls back to a question mark.
+- **Changing or removing a glyph changes every game that updates.** Say so in the pull request,
+  and redraw `docs/specimen.png` with `tools/test.sh specimen` whenever glyphs change.
+- **Keep `docs/`, `tests/` and `tools/` hidden from a game's Godot**: their `.gdignore` files
+  stop a game importing this repository's tests as its own, or leaving import files in the
+  submodule.
+- **Run Godot under `timeout`.** A stuck import pegs a core until killed.
